@@ -1,20 +1,24 @@
 pipeline {
     agent any
-
     stages {
+        stage('Restore') {
+            steps {
+                sh 'dotnet restore'
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Building...'
+                sh 'dotnet build --configuration Release'
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing...'
+                sh 'dotnet test'
             }
         }
-        stage('Deploy') {
+        stage('Publish') {
             steps {
-                echo 'Deploying...'
+                sh 'dotnet publish -c Release -o ./publish'
             }
         }
     }
