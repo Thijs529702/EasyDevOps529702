@@ -16,10 +16,16 @@ pipeline {
                 bat 'dotnet publish frontend/EasyDevOpsFrontend/EasyDevOpsFrontend.csproj -c Release -o ./out/frontend'
             }
         }
+        stage('Pull Trivy Docker Image') {
+            steps {
+                script {
+                    sh 'docker pull aquasec/trivy'
+                }
+            }
+        }
         stage('Security Scan with Trivy') {
             steps {
                 script {
-                    // Voer een beveiligingsscan uit met Trivy
                     sh '''
                     docker run --rm -v $(pwd):/app aquasec/trivy filesystem /app/out/frontend > trivy-report.txt
                     '''
@@ -29,7 +35,6 @@ pipeline {
         stage('Display Trivy Report') {
             steps {
                 script {
-                    // Toon de Trivy-rapportage
                     echo "=== Trivy Scan Report ==="
                     sh 'cat trivy-report.txt'
                 }
