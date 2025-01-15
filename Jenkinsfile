@@ -20,7 +20,7 @@ pipeline {
             steps {
                 bat '''
                 echo "Checking contents of out/frontend"
-                dir ./out/frontend
+                dir .\\out\\frontend
                 '''
             }
         }
