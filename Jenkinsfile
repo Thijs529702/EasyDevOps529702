@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Security Scan with Trivy') {
             steps {
-                bat 'docker run --rm -v "%cd%:/app" aquasec/trivy filesystem /app/out/frontend --severity HIGH,CRITICAL --debug > trivy-report.txt'
+                bat 'docker run --rm -v "%cd%:/app" aquasec/trivy filesystem /app/out/frontend --list-all-pkgs > trivy-report.txt'
                 bat 'type trivy-report.txt'
             }
         }
