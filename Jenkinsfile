@@ -11,24 +11,14 @@ pipeline {
                 bat 'dotnet build frontend/EasyDevOpsFrontend/EasyDevOpsFrontend.csproj --configuration Release'
             }
         }
-        stage('Restore WebApp') {
+        stage('Publish Frontend') {
             steps {
-                bat 'dotnet restore WebApp/WebApp.csproj'
+                bat 'dotnet publish frontend/EasyDevOpsFrontend/EasyDevOpsFrontend.csproj -c Release -o ../publish/frontend'
             }
         }
-        stage('Build WebApp') {
+        stage('Run Frontend') {
             steps {
-                bat 'dotnet build WebApp/WebApp.csproj --configuration Release'
-            }
-        }
-        stage('Test WebApp') {
-            steps {
-                bat 'dotnet test WebApp/WebApp.csproj'
-            }
-        }
-        stage('Publish WebApp') {
-            steps {
-                bat 'dotnet publish WebApp/WebApp.csproj -c Release -o ./publish'
+                bat 'cd ../publish/frontend && EasyDevOpsFrontend.exe'
             }
         }
     }
