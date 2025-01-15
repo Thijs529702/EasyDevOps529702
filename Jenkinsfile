@@ -18,26 +18,19 @@ pipeline {
         }
         stage('Pull Trivy Docker Image') {
             steps {
-                script {
-                    sh 'docker pull aquasec/trivy'
-                }
+                bat 'docker pull aquasec/trivy'
             }
         }
         stage('Security Scan with Trivy') {
             steps {
-                script {
-                    sh '''
-                    docker run --rm -v $(pwd):/app aquasec/trivy filesystem /app/out/frontend > trivy-report.txt
-                    '''
-                }
+                bat '''
+                docker run --rm -v %CD%:/app aquasec/trivy filesystem /app/out/frontend > trivy-report.txt
+                '''
             }
         }
         stage('Display Trivy Report') {
             steps {
-                script {
-                    echo "=== Trivy Scan Report ==="
-                    sh 'cat trivy-report.txt'
-                }
+                bat 'type trivy-report.txt'
             }
         }
     }
