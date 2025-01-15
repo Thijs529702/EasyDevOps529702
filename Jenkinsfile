@@ -13,30 +13,15 @@ pipeline {
         }
         stage('Publish Frontend') {
             steps {
-                bat 'dotnet publish frontend/EasyDevOpsFrontend/EasyDevOpsFrontend.csproj -c Release -o ../publish/frontend'
+                bat 'dotnet publish frontend/EasyDevOpsFrontend/EasyDevOpsFrontend.csproj -c Release -o ./out/frontend'
             }
         }
-        stage('Run Frontend') {
+        stage('Test Output') {
             steps {
                 bat '''
-                cd ../publish/frontend
-                EasyDevOpsFrontend.exe
+                echo "Checking contents of out/frontend"
+                dir ./out/frontend
                 '''
-            }
-        }
-        stage('Publish to GitHub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                    bat '''
-                    cd ../publish/frontend
-                    git init
-                    git remote add origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Thijs529702/EasyDevOps529702.git
-                    git checkout -b publish || git checkout publish
-                    git add .
-                    git commit -m "Add published files"
-                    git push origin publish --force
-                    '''
-                }
             }
         }
     }
