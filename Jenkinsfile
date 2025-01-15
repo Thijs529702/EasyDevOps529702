@@ -1,24 +1,34 @@
 pipeline {
     agent any
     stages {
-        stage('Restore') {
+        stage('Restore Frontend') {
             steps {
-                bat 'dotnet restore'
+                bat 'dotnet restore frontend/EasyDevOpsFrontend/EasyDevOpsFrontend.csproj'
             }
         }
-        stage('Build') {
+        stage('Build Frontend') {
             steps {
-                bat 'dotnet build --configuration Release'
+                bat 'dotnet build frontend/EasyDevOpsFrontend/EasyDevOpsFrontend.csproj --configuration Release'
             }
         }
-        stage('Test') {
+        stage('Restore WebApp') {
             steps {
-                bat 'dotnet test'
+                bat 'dotnet restore WebApp/WebApp.csproj'
             }
         }
-        stage('Publish') {
+        stage('Build WebApp') {
             steps {
-                bat 'dotnet publish -c Release -o ./publish'
+                bat 'dotnet build WebApp/WebApp.csproj --configuration Release'
+            }
+        }
+        stage('Test WebApp') {
+            steps {
+                bat 'dotnet test WebApp/WebApp.csproj'
+            }
+        }
+        stage('Publish WebApp') {
+            steps {
+                bat 'dotnet publish WebApp/WebApp.csproj -c Release -o ./publish'
             }
         }
     }
